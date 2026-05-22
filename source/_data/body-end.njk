@@ -1,0 +1,88 @@
+{% set demo_catalog = site.data['demo-catalog'] or [] %}
+{% if demo_catalog.length %}
+  <div class="demo-modal-overlay" data-demo-overlay hidden></div>
+  <div class="demo-modal" data-demo-modal hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="demo-modal-title">
+    <div class="demo-modal-panel">
+      <div class="demo-modal-head">
+        <div>
+          <div class="demo-modal-kicker">Demo</div>
+          <h2 id="demo-modal-title">Choose a page</h2>
+          <p>Click one item to open the corresponding demo page.</p>
+        </div>
+        <button class="demo-modal-close" type="button" data-demo-close aria-label="Close demo directory">×</button>
+      </div>
+      <div class="demo-modal-grid">
+        {% for item in demo_catalog %}
+          <a class="demo-card" href="{{ item.path }}" data-demo-link>
+            <span class="demo-card-badge">{{ item.badge }}</span>
+            <strong>{{ item.title }}</strong>
+            <span class="demo-card-summary">{{ item.summary }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const modal = document.querySelector('[data-demo-modal]');
+      const overlay = document.querySelector('[data-demo-overlay]');
+      if (!modal || !overlay) return;
+
+      const closeButton = modal.querySelector('[data-demo-close]');
+      const getMenuTrigger = () => document.querySelector('.menu-item-demo a');
+      let lastFocused = null;
+
+      function isDemoPath(href) {
+        if (!href) return false;
+        const normalized = href.replace(window.location.origin, '');
+        return normalized === '/demo/' || normalized === '/demo/index.html';
+      }
+
+      function openModal() {
+        lastFocused = document.activeElement;
+        modal.hidden = false;
+        overlay.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('demo-modal-open');
+        closeButton.focus();
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+        overlay.hidden = true;
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('demo-modal-open');
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+          lastFocused.focus();
+        }
+      }
+
+      document.addEventListener('click', (event) => {
+        const trigger = event.target.closest('.menu-item-demo a');
+        if (trigger && isDemoPath(trigger.getAttribute('href'))) {
+          event.preventDefault();
+          openModal();
+          return;
+        }
+
+        if (event.target.closest('[data-demo-close]') || event.target === overlay) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (modal.hidden) return;
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeModal();
+        }
+      });
+
+      const trigger = getMenuTrigger();
+      if (trigger) {
+        trigger.setAttribute('aria-haspopup', 'dialog');
+        trigger.setAttribute('aria-controls', 'demo-modal-title');
+      }
+    })();
+  </script>
+{% endif %}

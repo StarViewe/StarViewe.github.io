@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Lightweight Music Player",
+    "path": "/music-player-prototype/",
+    "badge": "Main",
+    "summary": "Self-contained player with controls and the built-in variant switcher."
+  },
+  {
+    "title": "Variant A · Cinematic Cover",
+    "path": "/music-player-prototype/?variant=A",
+    "badge": "A",
+    "summary": "Cover-first layout with a larger hero area and simpler primary controls."
+  },
+  {
+    "title": "Variant B · Studio Rack",
+    "path": "/music-player-prototype/?variant=B",
+    "badge": "B",
+    "summary": "Console-like layout with denser controls and a studio-inspired composition."
+  },
+  {
+    "title": "Variant C · Timeline Queue",
+    "path": "/music-player-prototype/?variant=C",
+    "badge": "C",
+    "summary": "Queue-first layout focused on browsing tracks before starting playback."
+  }
+]
